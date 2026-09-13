@@ -8,6 +8,7 @@ import {clerkMiddleware} from '@clerk/express'
 import cors from "cors"
 import fs from "fs"
 import path from "path";
+import job from "./lib/cron.js"
 
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
@@ -35,4 +36,7 @@ connectDb();
 
 app.listen(Port,() => {
     console.log(`Server Listening on Port ${Port} `)
+    if(process.env.NODE_ENV==="production"){
+        job.start();
+    }
 })
