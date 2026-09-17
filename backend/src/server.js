@@ -12,10 +12,11 @@ import job from "./lib/cron.js"
 import clerkwebhook from "./webhooks/clerk.webhook.js"
 import authRoutes from "./routes/auth.routes.js"
 import messageRoutes from "./routes/message.routes.js"
+import { app, server } from "./lib/socket.js";
 
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
-const app = express();
+
 const Port = process.env.PORT;
 const Frontend_Url = process.env.FRONTEND_URL;
 const public_Dir = path.join(process.cwd(),"public");
@@ -41,7 +42,7 @@ if(fs.existsSync(public_Dir)){
 
 connectDb();
 
-app.listen(Port,() => {
+server.listen(Port,() => {
     console.log(`Server Listening on Port ${Port} `)
     if(process.env.NODE_ENV==="production"){
         job.start();
