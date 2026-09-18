@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import { hasImageKitConfig, uploadChatMedia } from "../lib/imagekit.js";
-import { getReceiverSocketId } from "../lib/socket.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 
 export async function getUsersForSidebar(req,res) {
     try{
@@ -18,11 +18,11 @@ export async function getUsersForSidebar(req,res) {
 export async function getConversationsForSidebar(req,res) {
     try{
         const loggedInUserId = req.user._id;
-        const conversations = await Message.aggregat([
+        const conversations = await Message.aggregate([
             { $match: {$or: [{senderId: loggedInUserId}, {receiverId: loggedInUserId}]}},
             {
                 $group: {
-                    _id: {$cond: [{ $eq: ["senderId",loggedInUserId]},"$receiverId","$senderId"]},
+                    _id: {$cond: [{ $eq: ["$senderId",loggedInUserId]},"$receiverId","$senderId"]},
                     lastMessageAt: {$max: "$createdAt"},
                 }
             },

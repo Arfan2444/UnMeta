@@ -33,6 +33,7 @@ app.get("/health", (req,res) => {
 app.use("/api/auth",authRoutes);
 app.use("/api/messages",messageRoutes)
 
+
 if(fs.existsSync(public_Dir)){
     app.use(express.static(public_Dir))
     app.get("/{*any}",(req,res,next) => {
